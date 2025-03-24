@@ -1,4 +1,4 @@
-# UI Prototype: https://www.figma.com/design/BcDkgPVAx1LU1otOxV18eQ/Task-Manager-Web-App?node-id=0-1&t=pm6PKXdF8S80J0SG-1
+# UI Prototype: https://www.figma.com/proto/BcDkgPVAx1LU1otOxV18eQ/Task-Manager-Web-App?node-id=5-2&p=f&t=mNDijN2KigExHONH-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1
 
 
 # User Personas
