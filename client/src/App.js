@@ -7,7 +7,7 @@ function App() {
   const [showPendingOnly, setShowPendingOnly] = useState(false);
 
   // ✅ Correct Azure backend URL
-  const BASE_URL = 'https://taskmanager-backend-callistus-fpaxf6h3gbf5xeh.northeurope-01.azurewebsites.net/api/tasks';
+  const BASE_URL = 'https://taskmanager-backend-callistus-fpaxf6h3gbf5exeh.northeurope-01.azurewebsites.net/api/tasks';
 
   const fetchTasks = async () => {
     try {
