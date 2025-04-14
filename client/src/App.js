@@ -6,30 +6,29 @@ function App() {
   const [newTask, setNewTask] = useState('');
   const [showPendingOnly, setShowPendingOnly] = useState(false);
 
-  // Fetch tasks
+  // Fetch tasks from backend
   const fetchTasks = async () => {
     const response = await fetch('http://localhost:5000/api/tasks');
     const data = await response.json();
     setTasks(data);
   };
 
-  // Add task
+  // Add a task
   const addTask = async () => {
     if (!newTask.trim()) return;
 
-    const timestamp = new Date().toISOString();
     const response = await fetch('http://localhost:5000/api/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newTask, created_at: timestamp })
+      body: JSON.stringify({ title: newTask })
     });
 
     const data = await response.json();
-    setTasks([...tasks, { ...data, created_at: timestamp }]);
+    setTasks([...tasks, data]);
     setNewTask('');
   };
 
-  // Toggle task completion
+  // Toggle completion
   const toggleComplete = async (task) => {
     const response = await fetch(`http://localhost:5000/api/tasks/${task.id}`, {
       method: 'PUT',
@@ -43,7 +42,9 @@ function App() {
 
   // Delete task
   const deleteTask = async (id) => {
-    await fetch(`http://localhost:5000/api/tasks/${id}`, { method: 'DELETE' });
+    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      method: 'DELETE'
+    });
     setTasks(tasks.filter(task => task.id !== id));
   };
 
@@ -51,54 +52,79 @@ function App() {
     fetchTasks();
   }, []);
 
+  // Filter tasks if checkbox is checked
   const visibleTasks = showPendingOnly
     ? tasks.filter(task => !task.completed)
     : tasks;
 
-  const completedCount = tasks.filter(task => task.completed).length;
-  const pendingCount = tasks.length - completedCount;
-
   return (
     <div className="App">
-      <h1>📝 Task Manager Web App</h1>
+      <header className="App-header">
+        <h1>TaskMaster</h1>
+      </header>
 
       <div className="task-input">
+      <h3 className="add-task">ADD TASK</h3>
         <input
           type="text"
           placeholder="Enter your task..."
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
         />
-        <button onClick={addTask}>Add Task</button>
+        <button onClick={addTask}>Submit</button>
       </div>
 
-      <label>
-        <input
-          type="checkbox"
-          checked={showPendingOnly}
-          onChange={(e) => setShowPendingOnly(e.target.checked)}
-        />
-        Show only pending tasks
-      </label>
+      <div className="filter-section">
+        <label>
+          <input
+            type="checkbox"
+            checked={showPendingOnly}
+            onChange={(e) => setShowPendingOnly(e.target.checked)}
+          />
+          Show only pending tasks
+        </label>
+        <button
+          className="filter-button"
+          onClick={() => setShowPendingOnly(!showPendingOnly)}
+        >
+          {showPendingOnly ? "Show All" : "Show Pending"}
+        </button>
+      </div>
 
-      <p>✅ Completed: {completedCount} | 🕓 Pending: {pendingCount}</p>
-
-      <ul className="task-list">
-        {visibleTasks.map(task => (
-          <li key={task.id} className={task.completed ? 'done' : ''}>
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => toggleComplete(task)}
-            />
-            <span>{task.title}</span>
-            <small style={{ marginLeft: '10px', fontSize: '12px', color: '#777' }}>
-              {new Date(task.created_at || Date.now()).toLocaleString()}
-            </small>
-            <button onClick={() => deleteTask(task.id)}>🗑️</button>
-          </li>
-        ))}
-      </ul>
+      <table className="task-table">
+        <thead>
+          <tr>
+            <th>Task Name</th>
+            <th>Status</th>
+            <th>Filter</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {visibleTasks.map(task => (
+            <tr key={task.id}>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleComplete(task)}
+                />
+                <span>{task.title}</span>
+              </td>
+              <td>{task.completed ? "Completed" : "Pending"}</td>
+              <td>
+                <select value={task.completed ? "Completed" : "Pending"} onChange={(e) => toggleComplete(task)}>
+                  <option value="Completed">Completed</option>
+                  <option value="Pending">Pending</option>
+                </select>
+              </td>
+              <td>
+                <button className="delete-task" onClick={() => deleteTask(task.id)}>Delete Task</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

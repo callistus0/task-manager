@@ -1,130 +1,110 @@
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f4f6f8;
-  }
-  
-  /* App Container */
-  .App {
-    max-width: 600px;
-    margin: 60px auto;
-    background-color: #fff;
-    padding: 30px 25px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Heading */
-  h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 25px;
-  }
-  
-  /* Task Input Area */
-  .task-input {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 30px;
-  }
-  
-  .task-input input {
-    flex: 1;
-    padding: 12px 15px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-  }
-  
-  .task-input input:focus {
-    outline: none;
-    border-color: #007bff;
-  }
-  
-  .task-input button {
-    padding: 12px 20px;
-    background-color: #007bff;
-    border: none;
-    color: #fff;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.2s ease-in-out;
-  }
-  
-  .task-input button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Task List */
-  .task-list {
-    list-style: none;
-  }
-  
-  .task-list li {
-    display: flex;
-    align-items: center;
-    background-color: #f9f9f9;
-    margin-bottom: 12px;
-    padding: 12px 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-  }
-  
-  .task-list li input[type="checkbox"] {
-    transform: scale(1.2);
-  }
-  
-  .task-list li span {
-    flex: 1;
-    margin-left: 12px;
-    font-size: 16px;
-    color: #444;
-  }
-  
-  .task-list li.done span {
-    text-decoration: line-through;
-    color: #999;
-  }
-  
-  /* Delete button */
-  .task-list li button {
-    background: none;
-    border: none;
-    font-size: 18px;
-    color: #e74c3c;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: color 0.2s;
-  }
-  
-  .task-list li button:hover {
-    color: #c0392b;
-  }
+/* App.css */
 
-  .filter-toggle {
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    font-size: 14px;
-    color: #444;
-  }
-  
-  .filter-toggle input {
-    margin-right: 8px;
-  }
-  .task-list li.done span {
-    text-decoration: line-through;
-    color: green;
-    font-weight: bold;
-  }
-  
-  
-  
+/* Body and background */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #F7F7F7; /* Light grey background */
+  margin: 0;
+  padding: 0;
+}
+
+/* TaskMaster header styling */
+.App-header {
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #333;
+}
+
+/* Styling the task input area */
+.task-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.task-input input {
+  padding: 10px;
+  width: 300px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.task-input button {
+  background-color: #007BFF;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.task-input button:hover {
+  background-color: #0056b3;
+}
+
+/* Add task text styling */
+.add-task {
+  font-size: 1.5em;
+  color: #007BFF;
+  margin-bottom: 10px;
+}
+
+/* Task filter section styling */
+.filter-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.filter-button {
+  background-color: #007BFF;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.filter-button:hover {
+  background-color: #0056b3;
+}
+
+/* Task table styling */
+.task-table {
+  width: 80%;
+  margin: 30px auto;
+  border-collapse: collapse;
+}
+
+.task-table th, .task-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.task-table th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.task-table tbody tr:hover {
+  background-color: #f4f4f4;
+}
+
+/* Delete Task button */
+.delete-task {
+  background-color: #0056b3;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-task:hover {
+  background-color: darkred;
+}
