@@ -5,7 +5,12 @@ const pool = require('./db');
 const taskRoutes = require('./routes/tasks');
 
 const app = express();
-app.use(cors());
+
+// ✅ Enable CORS for your frontend domain
+app.use(cors({
+  origin: 'https://wonderful-forest-08f165403.6.azurestaticapps.net'
+}));
+
 app.use(express.json());
 
 // API routes
