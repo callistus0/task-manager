@@ -6,9 +6,11 @@ function App() {
   const [newTask, setNewTask] = useState('');
   const [showPendingOnly, setShowPendingOnly] = useState(false);
 
+  const BASE_URL = 'https://taskmanager-backend-callistus.azurewebsites.net/api/tasks';
+
   // Fetch tasks from backend
   const fetchTasks = async () => {
-    const response = await fetch('http://localhost:5000/api/tasks');
+    const response = await fetch(BASE_URL);
     const data = await response.json();
     setTasks(data);
   };
@@ -17,7 +19,7 @@ function App() {
   const addTask = async () => {
     if (!newTask.trim()) return;
 
-    const response = await fetch('http://localhost:5000/api/tasks', {
+    const response = await fetch(BASE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title: newTask })
@@ -30,7 +32,7 @@ function App() {
 
   // Toggle completion
   const toggleComplete = async (task) => {
-    const response = await fetch(`http://localhost:5000/api/tasks/${task.id}`, {
+    const response = await fetch(`${BASE_URL}/${task.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ completed: !task.completed })
@@ -42,7 +44,7 @@ function App() {
 
   // Delete task
   const deleteTask = async (id) => {
-    await fetch(`http://localhost:5000/api/tasks/${id}`, {
+    await fetch(`${BASE_URL}/${id}`, {
       method: 'DELETE'
     });
     setTasks(tasks.filter(task => task.id !== id));
@@ -52,7 +54,6 @@ function App() {
     fetchTasks();
   }, []);
 
-  // Filter tasks if checkbox is checked
   const visibleTasks = showPendingOnly
     ? tasks.filter(task => !task.completed)
     : tasks;
@@ -64,7 +65,7 @@ function App() {
       </header>
 
       <div className="task-input">
-      <h3 className="add-task">ADD TASK</h3>
+        <h3 className="add-task">ADD TASK</h3>
         <input
           type="text"
           placeholder="Enter your task..."
@@ -113,13 +114,18 @@ function App() {
               </td>
               <td>{task.completed ? "Completed" : "Pending"}</td>
               <td>
-                <select value={task.completed ? "Completed" : "Pending"} onChange={(e) => toggleComplete(task)}>
+                <select
+                  value={task.completed ? "Completed" : "Pending"}
+                  onChange={() => toggleComplete(task)}
+                >
                   <option value="Completed">Completed</option>
                   <option value="Pending">Pending</option>
                 </select>
               </td>
               <td>
-                <button className="delete-task" onClick={() => deleteTask(task.id)}>Delete Task</button>
+                <button className="delete-task" onClick={() => deleteTask(task.id)}>
+                  Delete Task
+                </button>
               </td>
             </tr>
           ))}
