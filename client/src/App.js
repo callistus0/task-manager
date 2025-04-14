@@ -6,10 +6,9 @@ function App() {
   const [newTask, setNewTask] = useState('');
   const [showPendingOnly, setShowPendingOnly] = useState(false);
 
-  // ✅ Azure backend URL
-  const BASE_URL = 'https://taskmanager-backend-callistus.azurewebsites.net/api/tasks';
+  // ✅ Correct Azure backend URL
+  const BASE_URL = 'https://taskmanager-backend-callistus-fpaxf6h3gbf5xeh.northeurope-01.azurewebsites.net/api/tasks';
 
-  // Fetch tasks from backend
   const fetchTasks = async () => {
     try {
       const response = await fetch(BASE_URL);
@@ -20,7 +19,6 @@ function App() {
     }
   };
 
-  // Add a new task
   const addTask = async () => {
     if (!newTask.trim()) return;
 
@@ -38,7 +36,6 @@ function App() {
     }
   };
 
-  // Toggle completion status
   const toggleComplete = async (task) => {
     try {
       const response = await fetch(`${BASE_URL}/${task.id}`, {
@@ -53,7 +50,6 @@ function App() {
     }
   };
 
-  // Delete a task
   const deleteTask = async (id) => {
     try {
       await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' });
