@@ -6,48 +6,61 @@ function App() {
   const [newTask, setNewTask] = useState('');
   const [showPendingOnly, setShowPendingOnly] = useState(false);
 
+  // ✅ Azure backend URL
   const BASE_URL = 'https://taskmanager-backend-callistus.azurewebsites.net/api/tasks';
 
   // Fetch tasks from backend
   const fetchTasks = async () => {
-    const response = await fetch(BASE_URL);
-    const data = await response.json();
-    setTasks(data);
+    try {
+      const response = await fetch(BASE_URL);
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error('Failed to fetch tasks:', error);
+    }
   };
 
-  // Add a task
+  // Add a new task
   const addTask = async () => {
     if (!newTask.trim()) return;
 
-    const response = await fetch(BASE_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newTask })
-    });
-
-    const data = await response.json();
-    setTasks([...tasks, data]);
-    setNewTask('');
+    try {
+      const response = await fetch(BASE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: newTask }),
+      });
+      const data = await response.json();
+      setTasks([...tasks, data]);
+      setNewTask('');
+    } catch (error) {
+      console.error('Failed to add task:', error);
+    }
   };
 
-  // Toggle completion
+  // Toggle completion status
   const toggleComplete = async (task) => {
-    const response = await fetch(`${BASE_URL}/${task.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ completed: !task.completed })
-    });
-
-    const updatedTask = await response.json();
-    setTasks(tasks.map(t => (t.id === updatedTask.id ? updatedTask : t)));
+    try {
+      const response = await fetch(`${BASE_URL}/${task.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ completed: !task.completed }),
+      });
+      const updatedTask = await response.json();
+      setTasks(tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
+    } catch (error) {
+      console.error('Failed to toggle task:', error);
+    }
   };
 
-  // Delete task
+  // Delete a task
   const deleteTask = async (id) => {
-    await fetch(`${BASE_URL}/${id}`, {
-      method: 'DELETE'
-    });
-    setTasks(tasks.filter(task => task.id !== id));
+    try {
+      await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' });
+      setTasks(tasks.filter((task) => task.id !== id));
+    } catch (error) {
+      console.error('Failed to delete task:', error);
+    }
   };
 
   useEffect(() => {
@@ -55,7 +68,7 @@ function App() {
   }, []);
 
   const visibleTasks = showPendingOnly
-    ? tasks.filter(task => !task.completed)
+    ? tasks.filter((task) => !task.completed)
     : tasks;
 
   return (
@@ -88,7 +101,7 @@ function App() {
           className="filter-button"
           onClick={() => setShowPendingOnly(!showPendingOnly)}
         >
-          {showPendingOnly ? "Show All" : "Show Pending"}
+          {showPendingOnly ? 'Show All' : 'Show Pending'}
         </button>
       </div>
 
@@ -102,7 +115,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {visibleTasks.map(task => (
+          {visibleTasks.map((task) => (
             <tr key={task.id}>
               <td>
                 <input
@@ -112,10 +125,10 @@ function App() {
                 />
                 <span>{task.title}</span>
               </td>
-              <td>{task.completed ? "Completed" : "Pending"}</td>
+              <td>{task.completed ? 'Completed' : 'Pending'}</td>
               <td>
                 <select
-                  value={task.completed ? "Completed" : "Pending"}
+                  value={task.completed ? 'Completed' : 'Pending'}
                   onChange={() => toggleComplete(task)}
                 >
                   <option value="Completed">Completed</option>
@@ -123,7 +136,10 @@ function App() {
                 </select>
               </td>
               <td>
-                <button className="delete-task" onClick={() => deleteTask(task.id)}>
+                <button
+                  className="delete-task"
+                  onClick={() => deleteTask(task.id)}
+                >
                   Delete Task
                 </button>
               </td>
