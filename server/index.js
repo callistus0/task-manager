@@ -16,8 +16,20 @@ app.use(express.json());
 // API routes
 app.use('/api/tasks', taskRoutes);
 
+// Basic route
 app.get('/', (req, res) => {
   res.send('Task Manager API is running');
+});
+
+// ✅ Test DB connection route
+app.get('/test-db', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.send(`✅ Connected to DB. Current time: ${result.rows[0].now}`);
+  } catch (err) {
+    console.error('❌ DB error:', err.message);
+    res.status(500).send(`❌ DB connection error: ${err.message}`);
+  }
 });
 
 const PORT = process.env.PORT || 5000;
