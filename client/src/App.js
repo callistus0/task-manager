@@ -6,16 +6,22 @@ function App() {
   const [newTask, setNewTask] = useState('');
   const [showPendingOnly, setShowPendingOnly] = useState(false);
 
-  // ✅ Correct Azure backend URL
   const BASE_URL = 'https://taskmanager-backend-callistus-fpaxf6h3gbf5exeh.northeurope-01.azurewebsites.net/api/tasks';
 
   const fetchTasks = async () => {
     try {
       const response = await fetch(BASE_URL);
       const data = await response.json();
-      setTasks(data);
+
+      if (Array.isArray(data)) {
+        setTasks(data);
+      } else {
+        console.error('Expected an array but got:', data);
+        setTasks([]);
+      }
     } catch (error) {
       console.error('Failed to fetch tasks:', error);
+      setTasks([]);
     }
   };
 
@@ -29,7 +35,7 @@ function App() {
         body: JSON.stringify({ title: newTask }),
       });
       const data = await response.json();
-      setTasks([...tasks, data]);
+      setTasks((prev) => [...prev, data]);
       setNewTask('');
     } catch (error) {
       console.error('Failed to add task:', error);
@@ -44,7 +50,9 @@ function App() {
         body: JSON.stringify({ completed: !task.completed }),
       });
       const updatedTask = await response.json();
-      setTasks(tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
+      setTasks((prev) =>
+        prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+      );
     } catch (error) {
       console.error('Failed to toggle task:', error);
     }
@@ -53,7 +61,7 @@ function App() {
   const deleteTask = async (id) => {
     try {
       await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' });
-      setTasks(tasks.filter((task) => task.id !== id));
+      setTasks((prev) => prev.filter((task) => task.id !== id));
     } catch (error) {
       console.error('Failed to delete task:', error);
     }
@@ -63,9 +71,11 @@ function App() {
     fetchTasks();
   }, []);
 
-  const visibleTasks = showPendingOnly
-    ? tasks.filter((task) => !task.completed)
-    : tasks;
+  const visibleTasks = Array.isArray(tasks)
+    ? showPendingOnly
+      ? tasks.filter((task) => !task.completed)
+      : tasks
+    : [];
 
   return (
     <div className="App">
