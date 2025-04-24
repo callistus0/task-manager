@@ -15,22 +15,6 @@ function App() {
 
   const BASE_URL = 'https://taskmanager-backend-callistus-fpaxf6h3gbf5exeh.northeurope-01.azurewebsites.net/api/tasks';
 
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}?userId=${user.id}`);
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setTasks(data);
-      } else {
-        console.error('Expected an array but got:', data);
-        setTasks([]);
-      }
-    } catch (error) {
-      console.error('Failed to fetch tasks:', error);
-      setTasks([]);
-    }
-  };
-
   const addTask = async () => {
     if (!newTask.trim()) {
       alert('Task cannot be empty.');
@@ -93,6 +77,22 @@ function App() {
 
   useEffect(() => {
     if (user) {
+      const fetchTasks = async () => {
+        try {
+          const response = await fetch(`${BASE_URL}?userId=${user.id}`);
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            setTasks(data);
+          } else {
+            console.error('Expected an array but got:', data);
+            setTasks([]);
+          }
+        } catch (error) {
+          console.error('Failed to fetch tasks:', error);
+          setTasks([]);
+        }
+      };
+
       fetchTasks();
     }
   }, [user]);
