@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import Login from './Login';
+import Register from './Register';
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [showPendingOnly, setShowPendingOnly] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+  const [user, setUser] = useState(null);
+  const [showRegister, setShowRegister] = useState(false);
 
   const BASE_URL = 'https://taskmanager-backend-callistus-fpaxf6h3gbf5exeh.northeurope-01.azurewebsites.net/api/tasks';
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch(BASE_URL);
+      const response = await fetch(`${BASE_URL}?userId=${user.id}`);
       const data = await response.json();
       if (Array.isArray(data)) {
         setTasks(data);
@@ -34,7 +41,7 @@ function App() {
       const response = await fetch(BASE_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: newTask })
+        body: JSON.stringify({ title: newTask, userId: user.id })
       });
       const data = await response.json();
       if (data && data.id) {
@@ -48,10 +55,9 @@ function App() {
 
   const toggleComplete = async (task) => {
     try {
-      const response = await fetch(`${BASE_URL}/${task.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ completed: !task.completed })
+      const response = await fetch(`${BASE_URL}/${task.id}/complete`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' }
       });
       const updatedTask = await response.json();
       setTasks((prev) =>
@@ -62,27 +68,73 @@ function App() {
     }
   };
 
-  const deleteTask = async (id) => {
+  const confirmDelete = (task) => {
+    setTaskToDelete(task);
+    setShowConfirm(true);
+  };
+
+  const deleteTask = async () => {
+    if (!taskToDelete) return;
+
     try {
-      await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' });
-      setTasks((prev) => prev.filter((task) => task.id !== id));
+      await fetch(`${BASE_URL}/${taskToDelete.id}`, { method: 'DELETE' });
+      setTasks((prev) => prev.filter((task) => task.id !== taskToDelete.id));
+      setShowConfirm(false);
+      setTaskToDelete(null);
     } catch (error) {
       console.error('Failed to delete task:', error);
     }
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const logout = () => {
+    setUser(null);
+    setTasks([]);
+  };
 
-  const visibleTasks = showPendingOnly
-    ? tasks.filter((task) => !task.completed)
-    : tasks;
+  useEffect(() => {
+    if (user) {
+      fetchTasks();
+    }
+  }, [user]);
+
+  const filteredTasks = tasks.filter(task => {
+    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = showPendingOnly ? !task.completed : true;
+    return matchesSearch && matchesStatus;
+  });
+
+  if (!user) {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1>TaskMaster</h1>
+        </header>
+        {showRegister ? (
+          <>
+            <Register onRegister={setUser} />
+            <p>
+              Already have an account?{' '}
+              <button onClick={() => setShowRegister(false)}>Login</button>
+            </p>
+          </>
+        ) : (
+          <>
+            <Login onLogin={setUser} />
+            <p>
+              Don't have an account?{' '}
+              <button onClick={() => setShowRegister(true)}>Register</button>
+            </p>
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="App">
       <header className="App-header">
         <h1>TaskMaster</h1>
+        <button onClick={logout} className="logout-button">Logout</button>
       </header>
 
       <div className="task-input">
@@ -97,6 +149,12 @@ function App() {
       </div>
 
       <div className="filter-section">
+        <input
+          type="text"
+          placeholder="Search tasks..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <label>
           <input
             type="checkbox"
@@ -106,6 +164,16 @@ function App() {
           Show only pending tasks
         </label>
       </div>
+
+      {showConfirm && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>Are you sure you want to delete "{taskToDelete?.title}"?</p>
+            <button onClick={deleteTask}>Yes, Delete</button>
+            <button onClick={() => setShowConfirm(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
 
       <table className="task-table">
         <thead>
@@ -117,7 +185,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {visibleTasks.map((task) => (
+          {filteredTasks.map((task) => (
             <tr key={task.id}>
               <td>
                 <input
@@ -138,7 +206,7 @@ function App() {
                 </select>
               </td>
               <td>
-                <button onClick={() => deleteTask(task.id)}>Delete Task</button>
+                <button onClick={() => confirmDelete(task)}>Delete Task</button>
               </td>
             </tr>
           ))}

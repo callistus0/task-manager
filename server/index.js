@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const pool = require('./db');
 const taskRoutes = require('./routes/tasks');
+const authRoutes = require('./routes/auth'); // ✅ Added auth routes
 
 const app = express();
 
@@ -13,10 +14,11 @@ app.use(cors({
 
 app.use(express.json());
 
-// API routes
+// ✅ API routes
 app.use('/api/tasks', taskRoutes);
+app.use('/api/auth', authRoutes); // ✅ Mount auth routes
 
-// Basic route
+// ✅ Basic route
 app.get('/', (req, res) => {
   res.send('Task Manager API is running');
 });
