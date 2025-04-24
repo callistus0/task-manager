@@ -12,7 +12,6 @@ function App() {
     try {
       const response = await fetch(BASE_URL);
       const data = await response.json();
-
       if (Array.isArray(data)) {
         setTasks(data);
       } else {
@@ -26,17 +25,22 @@ function App() {
   };
 
   const addTask = async () => {
-    if (!newTask.trim()) return;
+    if (!newTask.trim()) {
+      alert('Task cannot be empty.');
+      return;
+    }
 
     try {
       const response = await fetch(BASE_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: newTask }),
+        body: JSON.stringify({ title: newTask })
       });
       const data = await response.json();
-      setTasks((prev) => [...prev, data]);
-      setNewTask('');
+      if (data && data.id) {
+        setTasks([...tasks, data]);
+        setNewTask('');
+      }
     } catch (error) {
       console.error('Failed to add task:', error);
     }
@@ -47,7 +51,7 @@ function App() {
       const response = await fetch(`${BASE_URL}/${task.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ completed: !task.completed }),
+        body: JSON.stringify({ completed: !task.completed })
       });
       const updatedTask = await response.json();
       setTasks((prev) =>
@@ -71,11 +75,9 @@ function App() {
     fetchTasks();
   }, []);
 
-  const visibleTasks = Array.isArray(tasks)
-    ? showPendingOnly
-      ? tasks.filter((task) => !task.completed)
-      : tasks
-    : [];
+  const visibleTasks = showPendingOnly
+    ? tasks.filter((task) => !task.completed)
+    : tasks;
 
   return (
     <div className="App">
@@ -103,12 +105,6 @@ function App() {
           />
           Show only pending tasks
         </label>
-        <button
-          className="filter-button"
-          onClick={() => setShowPendingOnly(!showPendingOnly)}
-        >
-          {showPendingOnly ? 'Show All' : 'Show Pending'}
-        </button>
       </div>
 
       <table className="task-table">
@@ -116,7 +112,7 @@ function App() {
           <tr>
             <th>Task Name</th>
             <th>Status</th>
-            <th>Filter</th>
+            <th>Toggle</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -142,12 +138,7 @@ function App() {
                 </select>
               </td>
               <td>
-                <button
-                  className="delete-task"
-                  onClick={() => deleteTask(task.id)}
-                >
-                  Delete Task
-                </button>
+                <button onClick={() => deleteTask(task.id)}>Delete Task</button>
               </td>
             </tr>
           ))}

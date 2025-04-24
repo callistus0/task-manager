@@ -1,3 +1,8 @@
+const express = require('express');
+const router = express.Router();
+const pool = require('../db');
+
+// Create a new task
 router.post('/', async (req, res) => {
   try {
     const { title } = req.body;
@@ -15,3 +20,5 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: 'Failed to add task' });
   }
 });
+
+module.exports = router;
