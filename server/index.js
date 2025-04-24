@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const pool = require('./db');
 const taskRoutes = require('./routes/tasks');
-const authRoutes = require('./routes/auth'); // ✅ Added auth routes
+const authRoutes = require('./routes/auth'); // ✅ Auth route
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(express.json());
 
 // ✅ API routes
 app.use('/api/tasks', taskRoutes);
-app.use('/api/auth', authRoutes); // ✅ Mount auth routes
+app.use('/api/users', authRoutes); // ✅ Updated from /api/auth to /api/users
 
 // ✅ Basic route
 app.get('/', (req, res) => {

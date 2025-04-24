@@ -1,44 +1,46 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcrypt');
-const pool = require('../db');
+import React, { useState } from 'react';
 
-// 🔐 Register new user
-router.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const hashed = await bcrypt.hash(password, 10);
-    const result = await pool.query(
-      'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING id, username',
-      [username, hashed]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error('Registration error:', err.message);
-    res.status(500).json({ error: 'Username already exists or invalid input' });
-  }
-});
+function Login({ onLogin }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-// 🔑 Login user
-router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const result = await pool.query(
-      'SELECT * FROM users WHERE username = $1',
-      [username]
-    );
-    if (result.rows.length === 0) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+  const handleLogin = async () => {
+    try {
+      const res = await fetch('https://taskmanager-backend-callistus-fpaxf6h3gbf5exeh.northeurope-01.azurewebsites.net/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        onLogin({ id: data.userId, email });  // pass email + userId
+      } else {
+        alert(data.error || 'Login failed');
+      }
+    } catch (err) {
+      console.error('Login error:', err.message);
     }
-    const user = result.rows[0];
-    const valid = await bcrypt.compare(password, user.password);
-    if (!valid) return res.status(400).json({ error: 'Invalid credentials' });
+  };
 
-    res.json({ message: 'Login successful', userId: user.id });
-  } catch (err) {
-    console.error('Login error:', err.message);
-    res.status(500).json({ error: 'Login failed' });
-  }
-});
+  return (
+    <div>
+      <h3>Login</h3>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+      />
+      <button onClick={handleLogin}>Login</button>
+    </div>
+  );
+}
 
-module.exports = router;
+export default Login;
