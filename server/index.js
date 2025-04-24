@@ -16,7 +16,7 @@ app.use(express.json());
 
 // ✅ API routes
 app.use('/api/tasks', taskRoutes);
-app.use('/api/users', authRoutes); // ✅ Updated from /api/auth to /api/users
+app.use('/api/auth', authRoutes); // ✅ Updated to match frontend requests
 
 // ✅ Basic route
 app.get('/', (req, res) => {
