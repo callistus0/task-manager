@@ -3,27 +3,33 @@ const cors = require('cors');
 require('dotenv').config();
 const pool = require('./db');
 const taskRoutes = require('./routes/tasks');
-const authRoutes = require('./routes/auth'); // ✅ Auth route
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
-// ✅ Enable CORS for your frontend domain
+// ✅ Correct CORS setup for Azure Static Web App
 app.use(cors({
-  origin: 'https://wonderful-forest-08f165403.6.azurestaticapps.net'
+  origin: 'https://wonderful-forest-08f165403.6.azurestaticapps.net',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true
 }));
+
+// ✅ Handle preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 
 // ✅ API routes
 app.use('/api/tasks', taskRoutes);
-app.use('/api/auth', authRoutes); // ✅ Updated to match frontend requests
+app.use('/api/auth', authRoutes);
 
-// ✅ Basic route
+// ✅ Root route
 app.get('/', (req, res) => {
   res.send('Task Manager API is running');
 });
 
-// ✅ Test DB connection route
+// ✅ Test DB connection
 app.get('/test-db', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -36,5 +42,5 @@ app.get('/test-db', async (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
