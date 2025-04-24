@@ -5,7 +5,7 @@ const Register = ({ onRegister }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const BASE_URL = 'https://taskmanager-backend-callistus-fpaxf6h3gbf5exeh.northeurope-01.azurewebsites.net/api/users/register';
+  const BASE_URL = 'https://taskmanager-backend-callistus-fpaxf6h3gbf5exeh.northeurope-01.azurewebsites.net/api/auth/register';
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
