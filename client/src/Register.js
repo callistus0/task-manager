@@ -63,12 +63,6 @@ const Register = ({ onRegister, toggleForm }) => {
       <button className="login-button" onClick={handleRegister}>
         Register
       </button>
-      <p className="login-footer">
-        Already have an account?{' '}
-        <button className="login-link-button" onClick={toggleForm}>
-          Login
-        </button>
-      </p>
     </>
   );
 };
