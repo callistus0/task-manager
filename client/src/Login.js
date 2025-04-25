@@ -1,5 +1,6 @@
 // src/Login.js
 import React, { useState } from 'react';
+import './App.css';
 
 function Login({ onLogin, toggleForm }) {
   const [email, setEmail] = useState('');
@@ -32,33 +33,43 @@ function Login({ onLogin, toggleForm }) {
   };
 
   return (
-    <>
-      <h2 className="login-title">Welcome</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input
-        className="login-input"
-        type="email"
-        placeholder="Email Address"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        className="login-input"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button className="login-button" onClick={handleLogin}>
-        Login
-      </button>
-      <p className="login-footer">
-        Don’t have an account?{' '}
-        <button className="login-link-button" onClick={toggleForm}>
-          Register
+    <div className="login-container">
+      <div className="login-card">
+        <div className="login-logo-title">
+          <img src="/logo.png" alt="TaskMaster Logo" className="login-logo" />
+          <h1 className="App-header">TaskMaster</h1>
+        </div>
+
+        <h2 className="login-title">Welcome</h2>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        <input
+          className="login-input"
+          type="email"
+          placeholder="Email Address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="login-input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button className="login-button" onClick={handleLogin}>
+          Login
         </button>
-      </p>
-    </>
+
+        <p className="login-footer">
+          Don’t have an account?{' '}
+          <button className="login-link-button" onClick={toggleForm}>
+            Register
+          </button>
+        </p>
+      </div>
+    </div>
   );
 }
 

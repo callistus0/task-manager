@@ -1,7 +1,7 @@
 // src/Navbar.js
 import React from 'react';
 import './App.css';
-import logo from './logo.png'; // Make sure the logo is in src or public folder
+import logo from './logo.png'; 
 
 const Navbar = ({ onLogout }) => {
   return (
