@@ -43,11 +43,9 @@ function Login({ onLogin }) {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <div style={{ fontSize: '12px', marginBottom: '12px' }}>Forgot Password</div>
         <button className="login-button" onClick={handleLogin}>Login</button>
         <div className="login-footer">
           Don’t have an account?
-          <a href="/register">SignUp</a>
         </div>
       </div>
     </div>
