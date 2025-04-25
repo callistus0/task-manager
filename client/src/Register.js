@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import './App.css'; // Ensure your styles are loaded
 
-const Register = ({ onRegister }) => {
+const Register = ({ onRegister, toggleForm }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const BASE_URL = 'https://taskmanager-backend-callistus-fpaxf6h3gbf5exeh.northeurope-01.azurewebsites.net/api/auth/register';
+  const BASE_URL =
+    'https://taskmanager-backend-callistus-fpaxf6h3gbf5exeh.northeurope-01.azurewebsites.net/api/auth/register';
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
@@ -30,7 +32,7 @@ const Register = ({ onRegister }) => {
       const data = await res.json();
 
       if (res.ok) {
-        onRegister(data); // Login user automatically
+        onRegister(data); // Auto-login
       } else {
         setError(data.error || 'Registration failed');
       }
@@ -41,22 +43,34 @@ const Register = ({ onRegister }) => {
   };
 
   return (
-    <div>
-      <h2>Create Account</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleRegister}>Register</button>
+    <div className="login-container">
+      <div className="login-box">
+        <h2 className="login-title">Create Account</h2>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <input
+          className="login-input"
+          type="email"
+          placeholder="Email Address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          className="login-input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button className="login-button" onClick={handleRegister}>
+          Register
+        </button>
+        <p className="login-link">
+          Already have an account?{' '}
+          <span className="login-link-button" onClick={toggleForm}>
+            Login
+          </span>
+        </p>
+      </div>
     </div>
   );
 };
