@@ -1,5 +1,5 @@
+// src/Register.js
 import React, { useState } from 'react';
-import './App.css'; // Ensure your styles are loaded
 
 const Register = ({ onRegister, toggleForm }) => {
   const [email, setEmail] = useState('');
@@ -32,7 +32,7 @@ const Register = ({ onRegister, toggleForm }) => {
       const data = await res.json();
 
       if (res.ok) {
-        onRegister(data); // Auto-login
+        onRegister({ id: data.userId, email });
       } else {
         setError(data.error || 'Registration failed');
       }
@@ -43,35 +43,33 @@ const Register = ({ onRegister, toggleForm }) => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h2 className="login-title">Create Account</h2>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <input
-          className="login-input"
-          type="email"
-          placeholder="Email Address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="login-input"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="login-button" onClick={handleRegister}>
-          Register
+    <>
+      <h2 className="login-title">Create Account</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <input
+        className="login-input"
+        type="email"
+        placeholder="Email Address"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        className="login-input"
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button className="login-button" onClick={handleRegister}>
+        Register
+      </button>
+      <p className="login-footer">
+        Already have an account?{' '}
+        <button className="login-link-button" onClick={toggleForm}>
+          Login
         </button>
-        <p className="login-link">
-          Already have an account?{' '}
-          <span className="login-link-button" onClick={toggleForm}>
-            Login
-          </span>
-        </p>
-      </div>
-    </div>
+      </p>
+    </>
   );
 };
 

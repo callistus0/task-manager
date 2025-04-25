@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Login from './Login';
 import Register from './Register';
+import Navbar from './Navbar';
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -44,8 +45,8 @@ function App() {
         headers: { 'Content-Type': 'application/json' }
       });
       const updatedTask = await response.json();
-      setTasks((prev) =>
-        prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+      setTasks(prev =>
+        prev.map(t => (t.id === updatedTask.id ? updatedTask : t))
       );
     } catch (error) {
       console.error('Failed to toggle task:', error);
@@ -62,7 +63,7 @@ function App() {
 
     try {
       await fetch(`${BASE_URL}/${taskToDelete.id}`, { method: 'DELETE' });
-      setTasks((prev) => prev.filter((task) => task.id !== taskToDelete.id));
+      setTasks(prev => prev.filter(task => task.id !== taskToDelete.id));
       setShowConfirm(false);
       setTaskToDelete(null);
     } catch (error) {
@@ -120,7 +121,7 @@ function App() {
             <>
               <Login onLogin={setUser} />
               <p className="login-footer">
-                Don't have an account?{' '}
+                Don’t have an account?{' '}
                 <button className="login-link-button" onClick={() => setShowRegister(true)}>Register</button>
               </p>
             </>
@@ -132,10 +133,7 @@ function App() {
 
   return (
     <div className="App main-page">
-      <header className="App-header">
-        <h1>TaskMaster</h1>
-        <button onClick={logout} className="logout-button">Logout</button>
-      </header>
+      <Navbar onLogout={logout} />
 
       <div className="task-input">
         <h3 className="add-task">ADD TASK</h3>
@@ -206,7 +204,7 @@ function App() {
                 </select>
               </td>
               <td>
-                <button onClick={() => confirmDelete(task)}>Delete Task</button>
+                <button className="delete-task" onClick={() => confirmDelete(task)}>Delete Task</button>
               </td>
             </tr>
           ))}

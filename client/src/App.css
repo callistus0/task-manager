@@ -3,18 +3,39 @@
 /* Body and background */
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #2196F3; /* Updated background to match login image */
+  background-color: #2196F3;
   margin: 0;
   padding: 0;
 }
 
 /* TaskMaster header styling */
-.App-header {
-  text-align: center;
-  font-size: 2em;
+.App-header h1 {
+  font-size: 3.5em;
+  font-weight: 900;
+  color: #2196F3;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+/* Logout Button Styling */
+.logout-button {
+  background-color: #b71c1c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
   font-weight: bold;
-  margin-top: 20px;
-  color: #333;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #8b0000;
 }
 
 /* Login & Register Page Shared Styling */
@@ -112,12 +133,13 @@ body {
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+  padding: 0 10px;
 }
 
 .filter-section input[type="text"] {
   padding: 8px;
   margin-bottom: 10px;
-  width: 300px;
+  width: 250px;
   border-radius: 5px;
   border: 1px solid #ccc;
 }
@@ -159,19 +181,20 @@ body {
 
 /* Delete Task button */
 .delete-task {
-  background-color: #0056b3;
+  background-color: #2196F3;
   color: white;
   padding: 8px 16px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .delete-task:hover {
   background-color: darkred;
 }
 
-/* ✅ Confirmation Modal */
+/* Confirmation Modal */
 .modal {
   position: fixed;
   top: 0;
@@ -215,8 +238,7 @@ body {
   color: white;
 }
 
-
-/* 🔵 Additional Styling for Page Backgrounds */
+/* Backgrounds */
 .login-page, .register-page {
   background-color: #2196F3;
   min-height: 100vh;
@@ -228,5 +250,30 @@ body {
 
 .main-page {
   background-color: #F7F7F7;
-  /*min-height: 100vh;*/
+}
+/* Navbar styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 10px 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo img {
+  height: 40px;
+  margin-right: 12px;
+}
+
+.navbar-title {
+  font-size: 1.8em;
+  color: #2196F3;
+  font-weight: bold;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
