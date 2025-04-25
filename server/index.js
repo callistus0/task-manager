@@ -11,14 +11,11 @@ const app = express();
 const corsOptions = {
   origin: 'https://wonderful-forest-08f165403.6.azurestaticapps.net',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'], // Add Authorization header
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
 
-// Apply CORS middleware with the same options for all requests
 app.use(cors(corsOptions));
-
-// Handle preflight requests with the same CORS options
 app.options('*', cors(corsOptions));
 
 app.use(express.json());
@@ -40,6 +37,18 @@ app.get('/test-db', async (req, res) => {
     res.status(500).send(`❌ DB connection error: ${err.message}`);
   }
 });
+
+// Test database connection on startup
+(async () => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT NOW()');
+    console.log('✅ Database connected successfully:', result.rows[0].now);
+    client.release();
+  } catch (err) {
+    console.error('❌ Failed to connect to database on startup:', err.message);
+  }
+})();
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
