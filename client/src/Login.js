@@ -1,5 +1,6 @@
 // client/src/Login.js
 import React, { useState } from 'react';
+import './App.css'; 
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ function Login({ onLogin }) {
 
       const data = await res.json();
       if (res.ok) {
-        onLogin({ id: data.userId, email }); // ✅ Fix: pass full user object
+        onLogin({ id: data.userId, email });
       } else {
         alert(data.error || 'Login failed');
       }
@@ -25,21 +26,30 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div>
-      <h3>Login</h3>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
+    <div className="login-container">
+      <div className="login-card">
+        <h2>Welcome</h2>
+        <input
+          className="login-input"
+          type="email"
+          placeholder="Email Address"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+        />
+        <input
+          className="login-input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
+        <div style={{ fontSize: '12px', marginBottom: '12px' }}>Forgot Password</div>
+        <button className="login-button" onClick={handleLogin}>Login</button>
+        <div className="login-footer">
+          Don’t have an account?
+          <a href="/register">SignUp</a>
+        </div>
+      </div>
     </div>
   );
 }
