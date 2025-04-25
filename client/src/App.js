@@ -110,21 +110,9 @@ function App() {
         <div className="login-card">
           <h1 className="App-header">TaskMaster</h1>
           {showRegister ? (
-            <>
-              <Register onRegister={setUser} />
-              <p className="login-footer">
-                Already have an account?{' '}
-                <button className="login-link-button" onClick={() => setShowRegister(false)}>Login</button>
-              </p>
-            </>
+            <Register onRegister={setUser} toggleForm={() => setShowRegister(false)} />
           ) : (
-            <>
-              <Login onLogin={setUser} />
-              <p className="login-footer">
-                Don’t have an account?{' '}
-                <button className="login-link-button" onClick={() => setShowRegister(true)}>Register</button>
-              </p>
-            </>
+            <Login onLogin={setUser} toggleForm={() => setShowRegister(true)} />
           )}
         </div>
       </div>
