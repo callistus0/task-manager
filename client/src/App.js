@@ -105,33 +105,33 @@ function App() {
 
   if (!user) {
     return (
-      <div className={showRegister ? "register-page" : "login-page"}>
-        <header className="App-header">
-          <h1>TaskMaster</h1>
-        </header>
-        {showRegister ? (
-          <div className="login-card">
-            <Register onRegister={setUser} />
-            <p className="login-footer">
-              Already have an account?
-              <button onClick={() => setShowRegister(false)}>Login</button>
-            </p>
-          </div>
-        ) : (
-          <div className="login-card">
-            <Login onLogin={setUser} />
-            <p className="login-footer">
-              Don't have an account?
-              <button onClick={() => setShowRegister(true)}>Register</button>
-            </p>
-          </div>
-        )}
+      <div className="login-container">
+        <div className="login-card">
+          <h1 className="App-header">TaskMaster</h1>
+          {showRegister ? (
+            <>
+              <Register onRegister={setUser} />
+              <p className="login-footer">
+                Already have an account?{' '}
+                <button className="login-link-button" onClick={() => setShowRegister(false)}>Login</button>
+              </p>
+            </>
+          ) : (
+            <>
+              <Login onLogin={setUser} />
+              <p className="login-footer">
+                Don't have an account?{' '}
+                <button className="login-link-button" onClick={() => setShowRegister(true)}>Register</button>
+              </p>
+            </>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="main-page">
+    <div className="App main-page">
       <header className="App-header">
         <h1>TaskMaster</h1>
         <button onClick={logout} className="logout-button">Logout</button>
